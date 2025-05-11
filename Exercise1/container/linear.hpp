@@ -56,7 +56,7 @@ public:
   // Specific member functions
 
   // type operator[](argument) specifiers; // (non-mutable version; concrete function must throw std::out_of_range when out of range)
-  virtual const Data& operator[](ulong) const;
+  virtual const Data& operator[](ulong) const = 0;
 
   // type Front() specifiers; // (non-mutable version; concrete function must throw std::length_error when empty)
   virtual const Data& Front() const ;
@@ -129,13 +129,13 @@ public:
   // Specific member functions
 
   // type operator[](argument) specifiers; // (mutable version; concrete function must throw std::out_of_range when out of range)
-  virtual Data& operator[](ulong) override;
+  virtual Data& operator[](ulong) override = 0;
 
   // type Front() specifiers; // (mutable version; concrete function must throw std::length_error when empty)
-  virtual Data& Front() ;
+  virtual Data& Front();
 
   // type Back() specifiers; // (mutable version; concrete function must throw std::length_error when empty)
-  virtual Data& Back() ;
+  virtual Data& Back();
 
   /* ************************************************************************ */
 
@@ -196,7 +196,7 @@ public:
   // Specific member function
 
   // type Sort() specifiers;
-  virtual void Sort();
+  virtual void Sort() noexcept;
 
 protected:
 

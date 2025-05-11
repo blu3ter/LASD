@@ -118,7 +118,7 @@ public:
   // Specific member function (inherited from MappableContainer)
 
   // type Map(argument) specifiers; // Override MappableContainer member
-  void Map(MapFun) override;
+  virtual void Map(MapFun) override;
 
 };
 
@@ -176,7 +176,7 @@ public:
   // Specific member function (inherited from MappableContainer)
 
   // type Map(argument) specifiers; // Override MappableContainer member
-  void Map(MapFun) const override;
+ virtual void Map(MapFun) const override;
   
 
 };

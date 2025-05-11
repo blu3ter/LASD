@@ -4,7 +4,7 @@
 
 /* ************************************************************************** */
 
-#include <functional>
+//i have removed #include <functional> 
  
 
 /* ************************************************************************** */
@@ -75,7 +75,7 @@ public:
   // Specific member function (inherited from TestableContainer)
 
   // type Exists(argument) specifiers; // Override TestableContainer member
-  bool Exists(const Data&) const override;
+  bool Exists(const Data&) const noexcept override;
 
 };
 
@@ -116,7 +116,7 @@ virtual ~PreOrderTraversableContainer() = default;
   // type operator==(argument) specifiers; // Comparison of abstract types might be possible.
   bool operator==(const PreOrderTraversableContainer) const noexcept = delete;
   // type operator!=(argument) specifiers; // Comparison of abstract types might be possible.
-  boo bool operator!=(const PreOrderTraversableContainer) const noexcept = delete;
+  bool operator!=(const PreOrderTraversableContainer) const noexcept = delete;
 
 
   /* ************************************************************************ */
@@ -133,7 +133,7 @@ virtual ~PreOrderTraversableContainer() = default;
 
    template <typename Accumulator>
   // type PreOrderFold(arguments) specifiers;
-  virtual Accumulator PreOrderFold(FoldFun<Accumulator>, Accumulator) const = 0;
+  virtual Accumulator PreOrderFold(FoldFun<Accumulator>, Accumulator) const;;
 
   /* ************************************************************************ */
 
