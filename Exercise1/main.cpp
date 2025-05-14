@@ -1,5 +1,5 @@
 
-#include "zlasdtest/test.hpp"
+// #include "zlasdtest/test.hpp" // Commentato per escludere zlasdtest dalla compilazione diretta tramite main
 
 #include "zmytest/test.hpp"
 
@@ -11,7 +11,7 @@
 
 int main() {
   std::cout << "LASD Libraries 2025" << std::endl;
-  lasdtest();
-  //mytest();
+  //lasdtest();
+   mytest();
   return 0;
 }
