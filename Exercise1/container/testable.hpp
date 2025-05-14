@@ -35,7 +35,7 @@ virtual ~TestableContainer() = default;
 
   // Copy assignment
   // type operator=(argument); // Copy assignment of abstract types is not possible.
-  TeTestableContainer & operator=(const TestableContainer&) = delete
+  TestableContainer & operator=(const TestableContainer&) = delete;
 
   // Move assignment
   // type operator=(argument); // Move assignment of abstract types is not possible.
@@ -46,7 +46,7 @@ virtual ~TestableContainer() = default;
 
   // Comparison operators
   // type operator==(argument) specifiers; // Comparison of abstract types is not possible.
-  bool operator==(const TestableContrainer&) const noexcept =  delete;
+  bool operator==(const TestableContainer&) const noexcept =  delete;
   // type operator!=(argument) specifiers; // Comparison of abstract types is not possible.
   bool operator!=(const TestableContainer&) const noexcept = delete;
 

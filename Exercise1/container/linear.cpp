@@ -76,18 +76,23 @@ void MutableLinearContainer<Data>::PostOrderMap(const typename MappableContainer
 // SortableLinearContainer
 
 template<typename Data>
-void SortableLinearContainer<Data>::Sort(){
-    // Insertion sort
-      for (ulong i = 1; i < size; i++) {
-        Data key = std::move(operator[](i));
-        long j = i - 1;
-        while (j >= 0 && operator[](j) > key) {
-            operator[](j + 1) = std::move(operator[](j));
-            j--;
+void SortableLinearContainer<Data>::Sort() noexcept{
+    InsertionSort();
+}
+
+template<typename Data>
+void SortableLinearContainer<Data>::InsertionSort() noexcept{
+    for(ulong i = 1; i < this->size; ++i) { 
+        Data temp = this->operator[](i);
+        ulong j = i;
+        while (j > 0 && this->operator[](j - 1) > temp) { 
+            this->operator[](j) = this->operator[](j - 1); 
+            --j;
         }
-        operator[](j + 1) = std::move(key);
+        this->operator[](j) = temp; 
     }
 }
+
 
 }
 

@@ -41,7 +41,7 @@ public:
 
   // Move assignment
   // type operator=(argument); // Move assignment of abstract types is not possible.
-  bool operator = (LinearContainerr&&) = delete;
+  bool operator = (LinearContainer&&) = delete;
 
   /* ************************************************************************ */
 
@@ -56,7 +56,7 @@ public:
   // Specific member functions
 
   // type operator[](argument) specifiers; // (non-mutable version; concrete function must throw std::out_of_range when out of range)
-  virtual const Data& operator[](ulong) const = 0;
+  virtual const Data& operator[]( ulong) const = 0;
 
   // type Front() specifiers; // (non-mutable version; concrete function must throw std::length_error when empty)
   virtual const Data& Front() const ;
@@ -129,7 +129,7 @@ public:
   // Specific member functions
 
   // type operator[](argument) specifiers; // (mutable version; concrete function must throw std::out_of_range when out of range)
-  virtual Data& operator[](ulong) override = 0;
+  virtual Data& operator[](ulong) = 0;
 
   // type Front() specifiers; // (mutable version; concrete function must throw std::length_error when empty)
   virtual Data& Front();
@@ -163,7 +163,7 @@ public:
 };
 
 template <typename Data>
-class SortableLinearContainer : virtual public MutableContainer<Data> {
+class SortableLinearContainer : virtual public MutableLinearContainer<Data> {
   // Must extend MutableLinearContainer<Data>
 
 private:
@@ -173,7 +173,7 @@ private:
 protected:
 
   // ...
-  using Container::size
+  using Container::size;
 
 public:
 
@@ -200,7 +200,8 @@ public:
 
 protected:
 
-
+ // Auxiliary member functions, if necessary!
+ virtual void InsertionSort() noexcept;
   // ...
 
 };
@@ -209,6 +210,8 @@ protected:
 
 }
 
+#endif
+
 #include "linear.cpp"
 
-#endif
+

@@ -32,7 +32,7 @@ protected:
 public:
 
   // Destructor
-  virtuale ~TraversableContainer() = default;
+  virtual ~TraversableContainer() = default;
   // ~TraversableContainer() specifiers
 
   /* ************************************************************************ */
@@ -133,7 +133,7 @@ virtual ~PreOrderTraversableContainer() = default;
 
    template <typename Accumulator>
   // type PreOrderFold(arguments) specifiers;
-  virtual Accumulator PreOrderFold(FoldFun<Accumulator>, Accumulator) const;;
+  Accumulator PreOrderFold(FoldFun<Accumulator>, Accumulator) const;
 
   /* ************************************************************************ */
 
@@ -194,7 +194,7 @@ public:
 
    template <typename Accumulator>
   // type PostOrderFold(arguments) specifiers;
-  virtual Accumulator PostOrderFold(FoldFun<Accumulator>, Accumulator) const = 0;
+  Accumulator PostOrderFold(FoldFun<Accumulator>, Accumulator) const;
 
   /* ************************************************************************ */
 

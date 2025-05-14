@@ -140,7 +140,7 @@ bool operator != (const ResizableContainer&) const noexcept = delete;
   // Specific member functions
 
   // type Resize(argument) specifiers;
-virtual void Resize(ulong num) = 0;
+virtual void Resize(ulong) = 0;
   /* ************************************************************************ */
 
   // Specific member function (inherited from ClearableContainer)

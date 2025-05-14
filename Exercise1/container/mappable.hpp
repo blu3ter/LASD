@@ -169,14 +169,14 @@ public:
    using typename MappableContainer<Data>::MapFun;
 
   // type PostOrderMap(argument) specifiers;
-  virtual void PostOrderMap(Mapfun) = 0;
+  virtual void PostOrderMap(MapFun) = 0;
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from MappableContainer)
 
   // type Map(argument) specifiers; // Override MappableContainer member
- virtual void Map(MapFun) const override;
+ virtual void Map(MapFun)override;
   
 
 };
