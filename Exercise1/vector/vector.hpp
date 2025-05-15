@@ -122,6 +122,7 @@ protected:
 
   // Auxiliary functions, if necessary!
 
+
 };
 
 /* ************************************************************************** */
@@ -186,6 +187,8 @@ public:
 protected:
 
   // Auxiliary functions, if necessary!
+  // sort() already implemented in SortableLinearContainer
+
 
 
 };

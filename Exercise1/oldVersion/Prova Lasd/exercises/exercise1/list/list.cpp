@@ -111,7 +111,7 @@ List<Data>::~List() {
 // Copy assignment (List)
 template<typename Data>
 List<Data> & List<Data>::operator=(const List<Data> & lst) {
-  if (size <= lst.size) {
+  if (size <= lst.size) { 
     if (tail == nullptr) {
       List<Data> * tmplst = new List<Data>(lst);
       std::swap(*tmplst, *this);
@@ -122,8 +122,8 @@ List<Data> & List<Data>::operator=(const List<Data> & lst) {
         ncur->element = ocur->element;
       }
       if (ocur != nullptr) {
-        Node * newtail = new Node(*lst.tail);
-        tail->next = ocur->Clone(newtail);
+        Node * newtail = new Node(*lst.tail);            
+        tail->next = ocur->Clone(newtail);             
         tail = newtail;
       }
     }

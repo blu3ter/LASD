@@ -15,93 +15,83 @@ using namespace std;
 
 /* ************************************************************************** */
 
-void testVectorConstructorsAccessResize() {
-  std::cout << "\n--- Inizio Test Costruttori, operator[] e Resize Vector ---" << std::endl;
 
-  // Test costruttore di default e Size()
-  lasd::Vector<int> v1;
-  std::cout << "v1 (costruttore default): Size = " << v1.Size() << std::endl;
-
-  // Test costruttore con dimensione
-  lasd::Vector<int> v2(5);
-  std::cout << "v2 (costruttore con size 5): Size = " << v2.Size() << std::endl;
-
-  // Test operator[] per scrittura e lettura
-  if (v2.Size() >= 3) {
-    v2[0] = 10;
-    v2[1] = 20;
-    v2[2] = 30;
-    std::cout << "v2[0] = " << v2[0] << ", v2[1] = " << v2[1] << ", v2[2] = " << v2[2] << std::endl;
-  } else {
-    std::cout << "Errore: v2 troppo piccolo per test operator[]" << std::endl;
-  }
-
-  // Test Resize: ingrandimento
-  std::cout << "Resize v2 a 8" << std::endl;
-  v2.Resize(8);
-  std::cout << "v2 (dopo resize a 8): Size = " << v2.Size() << std::endl;
-  if (v2.Size() >= 1 && v2.Size() <= 8) {
-      std::cout << "v2[0] (dopo resize) = " << v2[0] << std::endl; // Dovrebbe essere 10 se il resize preserva i dati
-  }
-  if (v2.Size() >= 7) {
-    v2[6] = 70; // Assegna a un nuovo elemento
-    std::cout << "v2[6] (nuovo elemento) = " << v2[6] << std::endl;
-  }
-
-
-  // Test Resize: riduzione
-  std::cout << "Resize v2 a 2" << std::endl;
-  v2.Resize(2);
-  std::cout << "v2 (dopo resize a 2): Size = " << v2.Size() << std::endl;
-  if (v2.Size() >= 1) {
-      std::cout << "v2[0] (dopo resize a 2) = " << v2[0] << std::endl; // Dovrebbe essere 10
-  }
-  
-  // Esempio di come potresti testare il costruttore di copia che avevi iniziato
-  lasd::Vector<int> v_orig(3);
-  if (v_orig.Size() >=3) {
-    v_orig[0] = 1; v_orig[1] = 2; v_orig[2] = 3;
-  }
-  lasd::Vector<int> v_copia(v_orig); // Costruttore di copia
-  std::cout << "v_copia (da v_orig): Size = " << v_copia.Size() << std::endl;
-  if (v_copia.Size() >= 1) {
-    std::cout << "v_copia[0] = " << v_copia[0] << std::endl; // Dovrebbe essere 1
-  }
-  // Modifica l'originale per assicurarsi che la copia sia profonda
-  if (v_orig.Size() >= 1) {
-    v_orig[0] = 99;
-  }
-  std::cout << "v_copia[0] (dopo modifica v_orig[0]) = " << v_copia[0] << std::endl; // Dovrebbe essere ancora 1
-  std::cout << "v_orig[0] (dopo modifica) = " << v_orig[0] << std::endl; // Dovrebbe essere 99
-
-
-  std::cout << "--- Fine Test Costruttori, operator[] e Resize Vector ---" << std::endl;
-}
 
 void testVector() {
   std::cout << "\n--- Inizio Test Vector ---" << std::endl;
+
+  cout << "\n-Provo a creare un vettore e a stampare i suoi elementi-\n" << std::endl;
   //creo il vettore
   lasd::Vector<int> vettoreProva(3);
   //vettoreProva[4] = 10; lancia un out_of_range : corretto
 
   vettoreProva[0] = 1;
+  vettoreProva[1] = 2;
+  vettoreProva[2] = 3;
   //stampo il primo elemento
   cout << "Primo elemento : " << vettoreProva.Front() << std::endl;
+
+  //stampo con operator[]
+  cout << "Secondo elemento : " << vettoreProva[1] << std::endl;
 
 
   //stampo l'ultimo elemento 
   cout <<"Ultimo elemento : " << vettoreProva.Back() << std::endl; 
 
-  //copio il vettore
+  //costruisco e copio il vettore
   lasd::Vector<int> vettoreCopia(vettoreProva);
-  cout << "Vettore Copia: " << vettoreCopia[0] << std::endl; 
+  cout << "Vettore Copia con la stessa dimensione: " << vettoreCopia.Size() << std::endl; 
   
   //resize
   vettoreProva.Resize(2);
-  cout << "Vettore Resize: " << vettoreProva.Size() << std::endl; // accesso diretto 
+  cout << "Vettore Copia Resize: " << vettoreProva.Size() << std::endl; // accesso diretto 
+  // cout << vettoreProva[2] << std::endl;    ora il terzo elemento da out_of_range
 
 
+
+  cout << "\n-Provo una copia tra vettori-\n" << std::endl;
+
+  //copia tra vettori
+  lasd::SortableVector<int> vec1(3);
+  vec1[0] = 10;
+  vec1[1] = 20;
+  vec1[2] = 30;
+
+  lasd::SortableVector<int> vec2(1); // copia
+  cout << "Dimensione di vec2 prima della copia : " << vec2.Size() << endl;
+
+  vec2 = vec1; // chiamato vec2.operator=(vec1)copia
+
+  cout << "Dimensione di vec2 dopo la copia : " << vec2.Size() << endl;
+
+  // Qui usiamo l'operatore ==
+  cout << "Sono uguali ? : " << (vec1 == vec2) << endl; // true
+
+
+
+  cout << "\n- Provo ad ordinare un elemento-\n" << std::endl;
+  lasd::SortableVector<int> vettoreDaOrdinare(4);
+  vettoreDaOrdinare[0] = 4;
+  vettoreDaOrdinare[1] = 2;
+  vettoreDaOrdinare[2] = 3;
+  vettoreDaOrdinare[3] = 1;
+
+  for (int i = 0; i < vettoreDaOrdinare.Size(); i++) {
+    cout << "Elemento " << i << " : " << vettoreDaOrdinare[i] << endl;
+  }
+
+  //ora ordino
+  vettoreDaOrdinare.Sort();
+  cout << "Dopo l'ordinamento : " << endl;
+  for (int i = 0; i < vettoreDaOrdinare.Size(); i++) {
+    cout << "Elemento " << i << " : " << vettoreDaOrdinare[i] << endl;
+  }
   
+
+
+
+
+
  
   //Vedo un po di throw
   lasd::Vector<char> vettoreChar;
