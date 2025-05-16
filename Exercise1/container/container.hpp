@@ -37,7 +37,7 @@ public:
   Container& operator=(const Container&) = delete;
   // Move assignment
   // type operator=(argument); // Move assignment of abstract types is not possible.
-  Container& operator=(Container&&) = delete;
+  Container& operator=(Container&&) noexcept = delete;
   /* ************************************************************************ */
 
   // Comparison operators

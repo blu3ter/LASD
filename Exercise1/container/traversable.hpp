@@ -68,14 +68,14 @@ public:
 
    template <typename Accumulator>
   // type Fold(arguments) specifiers;
-  Accumulator Fold(FoldFun<Accumulator>, Accumulator);
+  Accumulator Fold(FoldFun<Accumulator>, Accumulator); //TODO: const
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from TestableContainer)
 
   // type Exists(argument) specifiers; // Override TestableContainer member
-  bool Exists(const Data&) const noexcept override;
+ virtual bool Exists(const Data&) const noexcept override;
 
 };
 
@@ -108,7 +108,7 @@ virtual ~PreOrderTraversableContainer() = default;
 
   // Move assignment
   // type operator=(argument); // Move assignment of abstract types is not possible.
-  PreOrderTraversableContainer & operator = (PreOrderTraversableContainer&&) = delete;
+  PreOrderTraversableContainer & operator = (PreOrderTraversableContainer&&) noexcept = delete;
 
   /* ************************************************************************ */
 
@@ -129,7 +129,7 @@ virtual ~PreOrderTraversableContainer() = default;
   virtual void PreOrderTraverse(TraverseFun) const = 0;
 
   template <typename Accumulator>
-  using FoldFun = typename TraversableContainer<Data>::FoldFun<Accumulator>;
+  using FoldFun = typename TraversableContainer<Data>::/*TODO template?*/ FoldFun<Accumulator>; 
 
    template <typename Accumulator>
   // type PreOrderFold(arguments) specifiers;
@@ -140,7 +140,7 @@ virtual ~PreOrderTraversableContainer() = default;
   // Specific member function (inherited from TraversableContainer)
 
   // type Traverse(arguments) specifiers; // Override TraversableContainer member
-  void Traverse(TraverseFun) const override;
+ virtual void Traverse(TraverseFun) const override;
 
 };
 
@@ -190,7 +190,7 @@ public:
   virtual void PostOrderTraverse(TraverseFun) const = 0;
 
   template <typename Accumulator>
-  using FoldFun = typename TraversableContainer<Data>::FoldFun<Accumulator>;
+  using FoldFun = typename TraversableContainer<Data>::/*TODO template?*/FoldFun<Accumulator>;
 
    template <typename Accumulator>
   // type PostOrderFold(arguments) specifiers;
@@ -201,7 +201,7 @@ public:
   // Specific member function (inherited from TraversableContainer)
 
   // type Traverse(arguments) specifiers; // Override TraversableContainer member
-  void Traverse(TraverseFun) const override;
+  virtual void Traverse(TraverseFun) const override;
 
 };
 

@@ -44,7 +44,7 @@ bool LinearContainer<Data>::operator==(const LinearContainer<Data>& other) const
     return false;
   }
   for (unsigned long i = 0; i < this->size; ++i) {
-    if (this->operator[](i) != other.operator[](i)) { // Using this->operator[] and other.operator[] for clarity
+    if (this->operator[](i) != other.operator[](i)) { 
       return false;
     }
   }

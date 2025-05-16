@@ -5,6 +5,7 @@
 /* ************************************************************************** */
 
 #include "mappable.hpp"
+//TODO #include "traversable.hpp"
 
 /* ************************************************************************** */
 
@@ -37,23 +38,30 @@ public:
 
   // Copy assignment
   // type operator=(argument); // Copy assignment of abstract types is not possible.
-  bool operator = (const LinearContainer&) = delete;
+  LinearContainer& operator = (const LinearContainer&) = delete;
+  using lasd::Container::operator=; //Resolve Woverloaded
 
   // Move assignment
   // type operator=(argument); // Move assignment of abstract types is not possible.
-  bool operator = (LinearContainer&&) = delete;
+  LinearContainer& operator = (LinearContainer&&) = delete;
 
   /* ************************************************************************ */
 
   // Comparison operators
   // type operator==(argument) specifiers; // Comparison of abstract types is possible.
-  virtual bool operator==(const LinearContainer&) const noexcept;
+  bool operator==(const LinearContainer&) const noexcept;
   // type operator!=(argument) specifiers; // Comparison of abstract types is possible.
-  virtual bool operator!=(const LinearContainer&) const noexcept;
+   bool operator!=(const LinearContainer&) const noexcept;
 
   /* ************************************************************************ */
 
   // Specific member functions
+
+   virtual Data& operator[](unsigned long) = 0; // (mutable version; concrete function must throw std::out_of_range when out of range)
+  
+  virtual Data& Front() = 0; // (mutable version; concrete function must throw std::length_error when empty)
+  
+  virtual Data& Back() = 0; // (mutable version; concrete function must throw std::length_error when empty)
 
   // type operator[](argument) specifiers; // (non-mutable version; concrete function must throw std::out_of_range when out of range)
   virtual const Data& operator[](ulong) const = 0;
@@ -132,10 +140,10 @@ public:
   virtual Data& operator[](ulong) = 0;
 
   // type Front() specifiers; // (mutable version; concrete function must throw std::length_error when empty)
-  virtual Data& Front();
+  virtual Data& Front(); //TODO perchè non pura?
 
   // type Back() specifiers; // (mutable version; concrete function must throw std::length_error when empty)
-  virtual Data& Back();
+  virtual Data& Back();//TODO perchè non pura?
 
   /* ************************************************************************ */
 

@@ -43,7 +43,7 @@ public:
 
   // Move assignment
   // type operator=(argument); // Move assignment of abstract types is not possible.   
-   MappableContainer & operator=(MappableContainer &&) = delete;
+   MappableContainer & operator=(MappableContainer &&) noexcept = delete;
   
   /* ************************************************************************ */
 
@@ -93,7 +93,7 @@ public:
   PreOrderMappableContainer & operator=(const PreOrderMappableContainer &) = delete;
   // Move assignment
   // type operator=(argument); // Move assignment of abstract types is not possible.
-  PreOrderMappableContainer & operator=(PreOrderMappableContainer &&) = delete;
+  PreOrderMappableContainer & operator=(PreOrderMappableContainer &&) noexcept = delete;
 
   /* ************************************************************************ */
 
@@ -152,7 +152,7 @@ public:
 
   // Move assignment
   // type operator=(argument); // Move assignment of abstract types is not possible.
-  PostOrderMappableContainer & operator=(PostOrderMappableContainer &&) = delete;
+  PostOrderMappableContainer & operator=(PostOrderMappableContainer &&) noexcept = delete;
 
   /* ************************************************************************ */
 
