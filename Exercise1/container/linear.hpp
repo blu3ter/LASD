@@ -47,16 +47,16 @@ public:
 
   // Comparison operators
   // type operator==(argument) specifiers; // Comparison of abstract types is possible.
-  bool operator == (const LinearContainer&) const noexcept = delete;
+  virtual bool operator==(const LinearContainer&) const noexcept;
   // type operator!=(argument) specifiers; // Comparison of abstract types is possible.
-  bool operator != (const LinearContainer&) const noexcept = delete;
+  virtual bool operator!=(const LinearContainer&) const noexcept;
 
   /* ************************************************************************ */
 
   // Specific member functions
 
   // type operator[](argument) specifiers; // (non-mutable version; concrete function must throw std::out_of_range when out of range)
-  virtual const Data& operator[]( ulong) const = 0;
+  virtual const Data& operator[](ulong) const = 0;
 
   // type Front() specifiers; // (non-mutable version; concrete function must throw std::length_error when empty)
   virtual const Data& Front() const ;

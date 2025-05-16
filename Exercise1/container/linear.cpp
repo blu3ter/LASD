@@ -38,6 +38,24 @@ void LinearContainer<Data>::PostOrderTraverse(const typename TraversableContaine
     }
 }
 
+template <typename Data>
+bool LinearContainer<Data>::operator==(const LinearContainer<Data>& other) const noexcept {
+  if (this->size != other.size) {
+    return false;
+  }
+  for (unsigned long i = 0; i < this->size; ++i) {
+    if (this->operator[](i) != other.operator[](i)) { // Using this->operator[] and other.operator[] for clarity
+      return false;
+    }
+  }
+  return true;
+}
+
+template <typename Data>
+bool LinearContainer<Data>::operator!=(const LinearContainer<Data>& other) const noexcept {
+  return !(*this == other);
+}
+
 /* ************************************************************************** */
 
 // MutableLinearContainer
@@ -94,6 +112,6 @@ void SortableLinearContainer<Data>::InsertionSort() noexcept{
 }
 
 
-}
+} // namespace lasd
 
 #endif
