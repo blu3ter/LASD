@@ -20,9 +20,12 @@ class SetVec : virtual public lasd::Set<Data>,
 
 private:
   Data* elements = nullptr;
-  unsigned long currentSize = 0;
-  unsigned long bufferSize = 4; // Dimensione fisica iniziale del buffer
-  unsigned long head = 0;       // Indice fisico del primo elemento logico
+  ulong
+   currentSize = 0;
+  ulong
+   bufferSize = 4; // Dimensione fisica iniziale del buffer
+  ulong
+   head = 0;       // Indice fisico del primo elemento logico
 
 protected:
   // using Container::size; // Già ereditato e implementato come Size()
@@ -74,8 +77,7 @@ public:
 
   /* ************************************************************************ */
 
-  // Specific member functions (inherited from Set/OrderedDictionaryContainer)
-  // Set eredita da DictionaryContainer e OrderedDictionaryContainer.
+  // Specific member functions (inherited from OrderedDictionaryContainer)
 
   virtual const Data& Min() const override; // Lancia std::length_error se vuoto.
   virtual Data MinNRemove() override;       // Lancia std::length_error se vuoto.
@@ -101,7 +103,8 @@ public:
   /* ************************************************************************ */
 
   // Specific member function (inherited from ResizableContainer)
-  virtual void Resize(unsigned long newsize) override; // Ridimensiona il buffer. Può perdere dati se newsize < currentSize.
+  virtual void Resize(ulong
+     newsize) override; // Ridimensiona il buffer. Può perdere dati se newsize < currentSize.
                                                        // Per un Set, Resize dovrebbe idealmente solo cambiare la capacità del buffer,
                                                        // non la dimensione logica (numero di elementi), a meno che non sia per troncare.
                                                        // La Resize di ResizableContainer è più generica.
@@ -112,7 +115,8 @@ public:
   virtual void Clear() override; // Rimuove tutti gli elementi.
 
   // Specific member functions (inherited from Container)
-  virtual inline unsigned long Size() const noexcept override { return currentSize; }
+  virtual inline ulong
+   Size() const noexcept override { return currentSize; }
   virtual inline bool Empty() const noexcept override { return (currentSize == 0); }
 
   /* ************************************************************************ */
@@ -124,8 +128,10 @@ public:
   virtual Data& Back() override; // Lancia std::length_error se vuoto
   virtual const Data& Back() const override; // Lancia std::length_error se vuoto
 
-  virtual Data& operator[](unsigned long) override; // Lancia std::out_of_range se l'indice non è valido
-  virtual const Data& operator[](unsigned long) const override; // Lancia std::out_of_range se l'indice non è valido
+  virtual Data& operator[](ulong
+  ) override; // Lancia std::out_of_range se l'indice non è valido
+  virtual const Data& operator[](ulong
+  ) const override; // Lancia std::out_of_range se l'indice non è valido
 
 protected:
   // Auxiliary functions
@@ -141,14 +147,18 @@ protected:
   long FindIndexOf(const Data& val) const; // Usato da Exists, Remove, Insert per trovare l'elemento o la sua posizione.
 
   // Funzione ausiliaria per l'inserimento che gestisce il ridimensionamento e lo shift.
-  bool InsertAt(unsigned long index, const Data& val);
-  bool InsertAt(unsigned long index, Data&& val);
+  bool InsertAt(ulong
+     index, const Data& val);
+  bool InsertAt(ulong
+     index, Data&& val);
 
   // Funzione ausiliaria per la rimozione che gestisce lo shift e il ridimensionamento.
-  void RemoveAt(unsigned long index);
+  void RemoveAt(ulong
+     index);
 
   // Funzioni per la gestione della capacità del buffer interno.
-  void EnsureCapacity(unsigned long minCapacity); // Assicura che bufferSize sia almeno minCapacity.
+  void EnsureCapacity(ulong
+     minCapacity); // Assicura che bufferSize sia almeno minCapacity.
   void ShrinkToFit(); // Riduce bufferSize a currentSize (o a un minimo ragionevole).
 
   // La ricerca binaria vera e propria.
