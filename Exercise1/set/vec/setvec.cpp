@@ -13,9 +13,6 @@ namespace lasd {
 
 template <typename Data>
 long SetVec<Data>::BinarySearch(const Data& val) const {
-    // Questa implementazione assume che gli elementi siano ordinati nel buffer circolare.
-    // Restituisce l'indice logico dell'elemento se trovato, altrimenti -1.
-
     if (this->Empty()) { 
         return -1;
     }
@@ -43,45 +40,63 @@ long SetVec<Data>::BinarySearch(const Data& val) const {
 
 template <typename Data>
 SetVec<Data>::SetVec() : buffer(DEFAULT_CAPACITY) {
-    this->size = 0;
+    this->size = 0; // Imposta Container::size a 0. Vector::Elements (ereditato) è nullptr.
+                    // buffer.size è DEFAULT_CAPACITY, buffer.Elements è allocato.
 }
 
 template <typename Data>
 SetVec<Data>::SetVec(const TraversableContainer<Data>& container) : buffer(container.Size() > 0 ? container.Size() : DEFAULT_CAPACITY) {
-    this->size = 0;
+    this->size = 0; // Inizializza la size del SetVec
+    // head e tail sono 0 di default
     container.Traverse(
         [this](const Data& data) {
-            this->Insert(data);
+            this->Insert(data); // Insert incrementerà this->size e gestirà head/tail/buffer
         }
     );
 }
 
 template <typename Data>
 SetVec<Data>::SetVec(MappableContainer<Data>&& container) : buffer(container.Size() > 0 ? container.Size() : DEFAULT_CAPACITY) {
-    this->size = 0;
+    this->size = 0; // Inizializza la size del SetVec
+    // head e tail sono 0 di default
     container.Map(
         [this](Data& data) {
-            this->Insert(std::move(data));
+            this->Insert(std::move(data)); // Insert incrementerà this->size e gestirà head/tail/buffer
         }
     );
 }
 
 // Copy constructor
 template <typename Data>
-SetVec<Data>::SetVec(const SetVec<Data>& other) : Vector<Data>(other) {
-    this->buffer = other.buffer;
-    this->head = other.head;
-    this->tail = other.tail;
-    this->size = other.size; 
+SetVec<Data>::SetVec(const SetVec<Data>& other) 
+  : Vector<Data>(other),       // Copia la parte base Vector. Questo imposta this->size (ereditato)
+                               // e this->Elements (ereditato) basandosi sulla parte base di 'other'.
+                               // Il costruttore di copia di Vector è stato reso robusto.
+    buffer(other.buffer),     // Copia il membro 'buffer' (Vector)
+    head(other.head),
+    tail(other.tail)
+    // this->size = other.size; // Ridondante: this->size (Container::size) è già stato impostato
+                               // correttamente da Vector<Data>(other).
+{
+    // Se Vector<Data>(other) imposta this->size correttamente, non serve altro.
+    // Assicuriamoci che this->size rifletta la size logica del SetVec.
+    // Dato che Vector<Data>(other) copia la size della *parte base* di other,
+    // e SetVec usa this->size per la sua dimensione logica, questo dovrebbe essere corretto.
 }
 
 // Move constructor
 template <typename Data>
-SetVec<Data>::SetVec(SetVec<Data>&& other) noexcept : Vector<Data>(std::move(other)) {
+SetVec<Data>::SetVec(SetVec<Data>&& other) noexcept 
+  : Vector<Data>(std::move(other)) // Sposta la parte base Vector. Questo è responsabile per
+                                   // lo spostamento di this->size (ereditato) e this->Elements (ereditato).
+{
     std::swap(this->buffer, other.buffer);
     std::swap(this->head, other.head);
     std::swap(this->tail, other.tail);
-    std::swap(this->size, other.size);
+    // NON fare std::swap(this->size, other.size);
+    // this->size è già stato correttamente scambiato da Vector<Data>(std::move(other)).
+    // 'other' è ora in uno stato valido ma non specificato (tipico dopo std::move).
+    // Il suo distruttore (~SetVec) sarà chiamato e gestirà le risorse.
 }
 
 
@@ -89,11 +104,11 @@ SetVec<Data>::SetVec(SetVec<Data>&& other) noexcept : Vector<Data>(std::move(oth
 template <typename Data>
 SetVec<Data>& SetVec<Data>::operator=(const SetVec<Data>& other) {
     if (this != &other) {
-        Vector<Data>::operator=(other);
-        this->buffer = other.buffer;
+        Vector<Data>::operator=(other); // Assegna la parte base Vector. Questo imposta this->size.
+        this->buffer = other.buffer;   // Assegna il membro buffer.
         this->head = other.head;
         this->tail = other.tail;
-        this->size = other.size;
+        // this->size = other.size; // Ridondante: this->size è già stato impostato da Vector<Data>::operator=(other).
     }
     return *this;
 }
@@ -102,11 +117,13 @@ SetVec<Data>& SetVec<Data>::operator=(const SetVec<Data>& other) {
 template <typename Data>
 SetVec<Data>& SetVec<Data>::operator=(SetVec<Data>&& other) noexcept {
     if (this != &other) {
-        Vector<Data>::operator=(std::move(other));
+        Vector<Data>::operator=(std::move(other)); // Sposta la parte base Vector. Gestisce this->size.
+        
         std::swap(this->buffer, other.buffer);
         std::swap(this->head, other.head);
         std::swap(this->tail, other.tail);
-        std::swap(this->size, other.size);
+        // NON fare std::swap(this->size, other.size);
+        // this->size è già stato correttamente scambiato da Vector<Data>::operator=(std::move(other)).
     }
     return *this;
 }
@@ -117,10 +134,12 @@ bool SetVec<Data>::operator==(const SetVec<Data>& other) const noexcept {
     if (this->size != other.size) {
         return false;
     }
-    if (this->Empty()) {
+    if (this->Empty()) { // Se this->size è 0, e other.size è 0, sono uguali.
         return true;
     }
+    // Confronta gli elementi in ordine logico
     for (ulong i = 0; i < this->size; ++i) {
+        // operator[] accede agli elementi tramite this->buffer, this->head, e this->size
         if (this->operator[](i) != other.operator[](i)) { 
             return false;
         }
@@ -147,15 +166,17 @@ bool SetVec<Data>::Insert(const Data& val) {
     }
 
     ulong insert_pos_logical = 0;
+    // Usa this->operator[] che è basato su this->buffer, this->head, this->size
     while(insert_pos_logical < this->size && this->operator[](insert_pos_logical) < val) {
         insert_pos_logical++;
     }
+    // this->buffer.Size() è la capacità del buffer Vector sottostante
     ulong insert_pos_physical = (this->head + insert_pos_logical) % this->buffer.Size();
 
-    if (insert_pos_logical == this->size) {
+    if (insert_pos_logical == this->size) { // Inserimento in coda (logica)
         this->buffer[this->tail] = val;
         this->tail = (this->tail + 1) % this->buffer.Size();
-    } else {
+    } else { // Inserimento in mezzo o all'inizio (logico)
         ulong current_logical = this->size;
         while(current_logical > insert_pos_logical) {
             ulong physical_dest = (this->head + current_logical) % this->buffer.Size();
@@ -215,13 +236,23 @@ bool SetVec<Data>::Remove(const Data& val) {
         return false; 
     }
 
+    // Sposta gli elementi a destra di found_idx_logical di una posizione a sinistra (logicamente).
     for (ulong i = static_cast<ulong>(found_idx_logical); i < this->size - 1; ++i) {
         ulong current_physical = (this->head + i) % this->buffer.Size();
         ulong next_physical = (this->head + i + 1) % this->buffer.Size();
-        this->buffer[current_physical] = this->buffer[next_physical];
+        this->buffer[current_physical] = this->buffer[next_physical]; // o std::move se appropriato
     }
 
-    this->tail = (this->tail == 0) ? (this->buffer.Size() - 1) : (this->tail - 1);
+    // Aggiorna tail e size
+    // Se il buffer è vuoto dopo la rimozione, head e tail dovrebbero essere 0.
+    // Se size diventa 0, tail dovrebbe idealmente tornare a head (es. 0).
+    if (this->size == 1) { // Stiamo per rimuovere l'ultimo elemento
+        this->head = 0;
+        this->tail = 0;
+    } else {
+        // Spostando gli elementi a sinistra, tail si sposta indietro.
+        this->tail = (this->tail == 0) ? (this->buffer.Size() - 1) : (this->tail - 1);
+    }
     this->size--;
 
     if (this->size < this->buffer.Size() / 4 && this->buffer.Size() > DEFAULT_CAPACITY) {
@@ -270,6 +301,8 @@ Data& SetVec<Data>::Back() {
     if (this->Empty()) {
         throw std::length_error("Accesso a Back() su SetVec vuoto");
     }
+    // L'ultimo elemento logico è all'indice fisico (head + size - 1) % buffer.Size()
+    // o, equivalentemente, l'elemento prima di tail se il buffer non è vuoto.
     ulong last_physical_idx = (this->tail == 0) ? (this->buffer.Size() - 1) : (this->tail - 1);
     return this->buffer[last_physical_idx]; 
 }
@@ -293,30 +326,81 @@ bool SetVec<Data>::Exists(const Data& val) const noexcept {
 // Specific member function (inherited from ClearableContainer)
 template <typename Data>
 void SetVec<Data>::Clear() {
-    this->buffer.Clear(); 
-    this->buffer.Resize(DEFAULT_CAPACITY); 
+    this->buffer.Clear(); // Svuota il Vector sottostante (Elements=nullptr, size=0)
+    this->buffer.Resize(DEFAULT_CAPACITY); // Riporta alla capacità di default (Elements allocato, size=DEFAULT_CAPACITY)
+                                        // Questo non è corretto per la logica di SetVec.
+                                        // buffer dovrebbe essere un Vector di capacità DEFAULT_CAPACITY ma size logica 0.
+    // Correzione per Clear:
+    // this->buffer.Clear(); // Dealloca gli elementi di buffer e imposta buffer.size = 0
+    // if (this->buffer.Size() != DEFAULT_CAPACITY) { // buffer.Size() qui è la capacità
+    //     this->buffer.Resize(DEFAULT_CAPACITY); // Ri-alloca buffer con capacità DEFAULT_CAPACITY
+    // }
+    // La chiamata a buffer.Clear() in Vector.cpp fa: delete[] Elements; Elements = nullptr; size = 0;
+    // La chiamata a buffer.Resize(DEFAULT_CAPACITY) in Vector.cpp fa:
+    //   delete[] Elements; Elements = new Data[DEFAULT_CAPACITY]{}; size = DEFAULT_CAPACITY;
+    // Questo significa che this->buffer.size (la size del Vector membro) diventa DEFAULT_CAPACITY.
+    // Ma la size logica del SetVec (this->size) deve essere 0.
+
+    // Logica corretta per SetVec::Clear():
+    Vector<Data> new_empty_buffer(DEFAULT_CAPACITY); // Crea un buffer con capacità ma size 0 (se Vector(ulong) fa questo)
+                                                    // Vector(ulong) imposta size = newsize. Quindi questo crea un buffer di size DEFAULT_CAPACITY.
+                                                    // Dobbiamo assicurarci che il buffer interno di SetVec abbia capacità DEFAULT_CAPACITY
+                                                    // ma la *size logica* del SetVec sia 0.
+    this->buffer.Clear(); // Imposta this->buffer.Elements = nullptr, this->buffer.size = 0
+    if (DEFAULT_CAPACITY > 0) {
+        this->buffer.Resize(DEFAULT_CAPACITY); // Alloca this->buffer.Elements con capacità DEFAULT_CAPACITY
+                                            // e imposta this->buffer.size = DEFAULT_CAPACITY.
+                                            // Questo non è ciò che vogliamo per la *logica* di SetVec.
+                                            // SetVec usa this->size per la sua dimensione logica.
+                                            // this->buffer è solo l'array di storage.
+                                            // La size di this->buffer dovrebbe essere la sua capacità.
+    }
+    // La classe Vector non distingue tra size logica e capacità. 'size' è la dimensione logica.
+    // Quindi, this->buffer.Resize(DEFAULT_CAPACITY) crea un buffer con DEFAULT_CAPACITY elementi.
+    // Questo va bene per la capacità, ma la *size logica* del SetVec deve essere 0.
+
+    // Approccio più semplice per Clear:
     this->head = 0;
     this->tail = 0;
-    this->size = 0;
+    this->size = 0; // La size logica del SetVec è 0.
+    // Il buffer può mantenere la sua capacità, o essere ridimensionato se necessario.
+    // Per coerenza con il costruttore di default, potremmo voler un buffer di DEFAULT_CAPACITY.
+    if (this->buffer.Size() != DEFAULT_CAPACITY) { // buffer.Size() è la size/capacità del Vector membro
+        this->buffer.Resize(DEFAULT_CAPACITY); // Assicura che il buffer abbia la capacità di default.
+                                               // Vector::Resize imposta anche la size del Vector membro.
+    }
+    // Dopo Resize, this->buffer.size è DEFAULT_CAPACITY. Questo è ok se interpretiamo
+    // this->buffer.size come la capacità del buffer di SetVec.
+    // La size logica di SetVec è this->size (Container::size).
 }
 
 // Specific member function (inherited from ResizableContainer)
 template <typename Data>
-void SetVec<Data>::Resize(ulong new_capacity) {
-    if (new_capacity == this->buffer.Size()) return;
-    if (new_capacity < this->size) new_capacity = this->size; 
-    if (new_capacity == 0) new_capacity = DEFAULT_CAPACITY;
+void SetVec<Data>::Resize(ulong new_buffer_capacity) {
+    // Questa funzione dovrebbe ridimensionare this->buffer, non this->size (logico).
+    // Ma l'interfaccia ResizableContainer si riferisce alla size logica.
+    // Qui c'è ambiguità. Assumiamo che Resize si riferisca alla capacità del buffer interno.
+    if (new_buffer_capacity == this->buffer.Size()) return;
+    
+    // Non si può ridurre la capacità del buffer a meno degli elementi attualmente contenuti.
+    if (new_buffer_capacity < this->size) new_buffer_capacity = this->size; 
+    if (new_buffer_capacity == 0 && this->size > 0) new_buffer_capacity = this->size; // Non può essere 0 se ci sono elementi
+    if (new_buffer_capacity == 0 && this->size == 0) new_buffer_capacity = DEFAULT_CAPACITY; // Minima capacità
 
-    Vector<Data> new_buffer(new_capacity);
-    ulong current_size = this->size; 
-    for (ulong i = 0; i < current_size; ++i) {
-        new_buffer[i] = this->operator[](i); 
+    Vector<Data> new_physical_buffer(new_buffer_capacity); // Alloca un nuovo Vector con la nuova capacità
+                                                        // Vector(ulong) imposta la sua size alla capacità.
+    ulong current_logical_size = this->size; 
+    for (ulong i = 0; i < current_logical_size; ++i) {
+        new_physical_buffer[i] = this->operator[](i); // Copia gli elementi in ordine logico
     }
     
-    this->buffer = std::move(new_buffer);
+    this->buffer = std::move(new_physical_buffer); // Sposta il nuovo buffer
     this->head = 0;
-    this->tail = current_size % this->buffer.Size(); 
-    this->size = current_size; 
+    // tail è la posizione del prossimo inserimento. Se head=0, tail = size logica.
+    this->tail = current_logical_size % this->buffer.Size(); 
+                                                    // Se buffer.Size() (capacità) è 0, questo è un problema.
+                                                    // Ma abbiamo gestito new_buffer_capacity == 0 sopra.
+    this->size = current_logical_size; // La size logica del SetVec non cambia con questo tipo di resize.
 }
 
 
@@ -430,21 +514,18 @@ const Data& SetVec<Data>::Successor(const Data& val) const {
     }
     long idx = BinarySearch(val); 
     if (idx != -1) { // val esiste
-        if (this->size == 0) { // Controllo di sicurezza aggiuntivo
+        if (this->size == 0) { 
              throw std::length_error("Nessun successore: set vuoto nonostante idx valido (impossibile).");
         }
-        // Confronto corretto per evitare warning signed/unsigned e underflow
         if (static_cast<ulong>(idx) == this->size - 1) { 
             throw std::length_error("Nessun successore per il valore massimo.");
         }
-        // Assicura che idx + 1 sia un indice logico valido prima dell'accesso
         if (static_cast<ulong>(idx + 1) < this->size) {
             return this->operator[](static_cast<ulong>(idx + 1)); 
         } else {
-            // Questo ramo non dovrebbe essere raggiunto se la logica precedente è corretta
             throw std::length_error("Errore logico: idx non è l'ultimo ma idx+1 è fuori range.");
         }
-    } else { // val non esiste, cerca il successore del punto in cui val sarebbe inserito
+    } else { 
         ulong low = 0;
         ulong high = this->size;
         ulong potential_idx = this->size; 
