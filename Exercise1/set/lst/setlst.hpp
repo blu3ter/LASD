@@ -146,6 +146,7 @@ public:
 protected:
 
   // Auxiliary functions, if necessary!
+bool BinarySearch(const Data& value) const;
 
 };
 
