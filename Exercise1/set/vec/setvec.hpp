@@ -5,7 +5,7 @@
 /* ************************************************************************** */
 
 #include "../set.hpp"
-#include "../../vector/vector.hpp"
+#include "../../vector/vector.hpp
 
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@ namespace lasd {
 
 template <typename Data>
 class SetVec : virtual public Set<Data>,
-                virtual public Vector<Data> {
+                virtual public ResizableContainer {
   // Must extend Set<Data>,
   //             ResizableContainer
 
@@ -25,7 +25,11 @@ private:
 
 protected:
 
-   using Container::size;
+
+  lasd::Vector<Data> buffer;
+  ulong head = 0;
+  ulong tail = 0;
+  static const ulong DEFAULT_CAPACITY = 4;
 
   // ...
 
@@ -33,7 +37,7 @@ public:
 
   // Default constructor
   // SetVec() specifiers;
-  SetVec() = default;
+  SetVec();
 
   /* ************************************************************************ */
 
@@ -141,9 +145,16 @@ public:
   // type Clear() specifiers; // Override ClearableContainer member
   virtual void Clear() override;
 
+  /* ************************************************************************ */
+
+  // Specific member function (inherited from ResizableContainer)
+  // type Resize(argument) specifiers; // Override ResizableContainer member
+  virtual void Resize(ulong new_capacity) override;
+
 protected:
 
   // Auxiliary functions, if necessary!
+  virtual bool BinarySearch(const Data& value) const;
 
 };
 

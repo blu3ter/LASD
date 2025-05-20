@@ -27,8 +27,9 @@ protected:
   using Container::size;
 
   Data * Elements = nullptr;
+  static const ulong DEFAULT_CAPACITY = 16;
   // ...
-
+ 
 public:
 
   // Default constructor
