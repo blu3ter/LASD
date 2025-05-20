@@ -115,28 +115,28 @@ public:
   // Specific member functions
 
   // type Min(argument) specifiers; // (concrete function must throw std::length_error when empty)
-  virtual Data Min() const = 0; //TODO forse va const prima di Data e Data&
+  virtual const Data& Min() const = 0; //TODO forse va const prima di Data e Data&
   // type MinNRemove(argument) specifiers; // (concrete function must throw std::length_error when empty)
   virtual Data MinNRemove() = 0;
   // type RemoveMin(argument) specifiers; // (concrete function must throw std::length_error when empty)
   virtual void RemoveMin() = 0;
 
   // type Max(argument) specifiers; // (concrete function must throw std::length_error when empty)
-  virtual Data Max() const = 0; //TODO forse va const prima di Data&
+  virtual const Data& Max() const = 0; //TODO forse va const prima di Data&
   // type MaxNRemove(argument) specifiers; // (concrete function must throw std::length_error when empty)
   virtual Data MaxNRemove() = 0;
   // type RemoveMax(argument) specifiers; // (concrete function must throw std::length_error when empty)
   virtual void RemoveMax() = 0;
 
   // type Predecessor(argument) specifiers; // (concrete function must throw std::length_error when not found)
-  virtual Data Predecessor(const Data&) const = 0;  //TODO forse va const prima di Data&
+  virtual const Data& Predecessor(const Data&) const = 0;  //TODO forse va const prima di Data&
   // type PredecessorNRemove(argument) specifiers; // (concrete function must throw std::length_error when not found)
   virtual Data PredecessorNRemove(const Data&) = 0;
   // type RemovePredecessor(argument) specifiers; // (concrete function must throw std::length_error when not found)
   virtual void RemovePredecessor(const Data&) = 0;
 
   // type Successor(argument) specifiers; // (concrete function must throw std::length_error when not found)
-  virtual Data Successor(const Data&) const = 0;  //TODO forse va const prima di Data&
+  virtual const Data& Successor(const Data&) const = 0;  //TODO forse va const prima di Data&
 
   // type SuccessorNRemove(argument) specifiers; // (concrete function must throw std::length_error when not found
   virtual Data SuccessorNRemove(const Data&) = 0;

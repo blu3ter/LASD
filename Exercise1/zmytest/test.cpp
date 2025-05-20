@@ -113,7 +113,7 @@ void testVector() {
 void mytest() {
   std::cout << "== Esecuzione di mytest() iniziata  ==" << std::endl;
   
- // testVectorConstructorsAccessResize();
+
   testVector();
   
 

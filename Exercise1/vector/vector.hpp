@@ -39,7 +39,7 @@ public:
 
   // Specific constructors
   // Vector(argument) specifiers; // A vector with a given initial dimension
-  Vector(const ulong);
+  Vector (const ulong);
   // Vector(argument) specifiers; // A vector obtained from a TraversableContainer
   Vector (const TraversableContainer<Data>&);
   // Vector(argument) specifiers; // A vector obtained from a MappableContainer
@@ -49,11 +49,11 @@ public:
 
   // Copy constructor
   // Vector(argument) specifiers;
-  Vector(const Vector<Data>&);
+  Vector (const Vector<Data>&);
 
   // Move constructor
   // Vector(argument) specifiers;
-  Vector(Vector<Data>&&) noexcept;
+  Vector (Vector<Data>&&) noexcept;
   /* ************************************************************************ */
 
   // Destructor
