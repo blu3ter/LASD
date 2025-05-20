@@ -1,11 +1,10 @@
-
 #ifndef SETVEC_HPP
 #define SETVEC_HPP
 
 /* ************************************************************************** */
 
 #include "../set.hpp"
-#include "../../vector/vector.hpp
+#include "../../vector/vector.hpp"
 
 /* ************************************************************************** */
 
@@ -15,7 +14,8 @@ namespace lasd {
 
 template <typename Data>
 class SetVec : virtual public Set<Data>,
-                virtual public ResizableContainer {
+                virtual public ResizableContainer,
+                virtual public Vector<Data> {
   // Must extend Set<Data>,
   //             ResizableContainer
 
@@ -129,7 +129,30 @@ public:
   // Specific member functions (inherited from LinearContainer)
 
   // type operator[](argument) specifiers; // Override LinearContainer member (must throw std::out_of_range when out of range)
-  virtual Data& operator[](ulong) override;
+  // Accesso all'elemento logico i-esimo del set ordinato.
+  // L'implementazione deve tradurre l'indice logico in un indice fisico
+  // per il buffer circolare interno 'this->buffer' usando 'this->head'.
+  // Deve lanciare std::out_of_range se logicalIndex >= this->size.
+  // ATTENZIONE: la versione non-const, se permette la modifica,
+  // deve garantire il mantenimento delle proprietà del Set (unicità, ordine).
+  virtual Data& operator[](ulong logicalIndex) override;
+  virtual const Data& operator[](ulong logicalIndex) const override;
+
+  // Restituisce il primo elemento logico (il minimo) del set.
+  // Può delegare a this->Min().
+  // Deve lanciare std::length_error se il set è vuoto (come da interfaccia LinearContainer).
+  // ATTENZIONE: la versione non-const, se permette la modifica del minimo,
+  // deve garantire il mantenimento delle proprietà del Set.
+  virtual Data& Front() override;
+  virtual const Data& Front() const override;
+
+  // Restituisce l'ultimo elemento logico (il massimo) del set.
+  // Può delegare a this->Max().
+  // Deve lanciare std::length_error se il set è vuoto (come da interfaccia LinearContainer).
+  // ATTENZIONE: la versione non-const, se permette la modifica del massimo,
+  // deve garantire il mantenimento delle proprietà del Set.
+  virtual Data& Back() override;
+  virtual const Data& Back() const override;
 
   /* ************************************************************************** */
 
@@ -154,7 +177,9 @@ public:
 protected:
 
   // Auxiliary functions, if necessary!
-  virtual bool BinarySearch(const Data& value) const;
+  // Cerca il valore 'value' nel set.
+  // Restituisce l'indice logico dell'elemento se trovato, altrimenti -1.
+  virtual long BinarySearch(const Data& value) const; // Restituisce indice logico o -1
 
 };
 
