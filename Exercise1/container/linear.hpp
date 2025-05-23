@@ -5,7 +5,7 @@
 /* ************************************************************************** */
 
 #include "mappable.hpp"
-//TODO #include "traversable.hpp"
+
 
 /* ************************************************************************** */
 
@@ -140,10 +140,10 @@ public:
   virtual Data& operator[](ulong) = 0;
 
   // type Front() specifiers; // (mutable version; concrete function must throw std::length_error when empty)
-  virtual Data& Front(); //TODO perchè non pura?
+  virtual Data& Front(); 
 
   // type Back() specifiers; // (mutable version; concrete function must throw std::length_error when empty)
-  virtual Data& Back();//TODO perchè non pura?
+  virtual Data& Back(); 
 
   /* ************************************************************************ */
 

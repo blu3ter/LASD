@@ -15,7 +15,7 @@ namespace lasd {
 template <typename Data>
 class SetVec : virtual public Set<Data>,
                 virtual public ResizableContainer,
-                virtual public Vector<Data> {
+                virtual public Vector<Data> { // Extend Vector<Data> for more efficient access
   // Must extend Set<Data>,
   //             ResizableContainer
 
@@ -133,12 +133,7 @@ public:
 
   virtual Data& Front() override;
   virtual const Data& Front() const override;
-
-  // Restituisce l'ultimo elemento logico (il massimo) del set.
-  // Può delegare a this->Max().
-  // Deve lanciare std::length_error se il set è vuoto (come da interfaccia LinearContainer).
-  // ATTENZIONE: la versione non-const, se permette la modifica del massimo,
-  // deve garantire il mantenimento delle proprietà del Set.
+  
   virtual Data& Back() override;
   virtual const Data& Back() const override;
 

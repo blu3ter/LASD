@@ -3,7 +3,7 @@
 
 #include <stdexcept>
 #include <string>
-#include <iostream> // Per std::cerr (debug)
+#include <iostream> 
 #include "./vector.hpp"
 
 namespace lasd {
@@ -56,15 +56,11 @@ Vector<Data>::Vector(const Vector<Data>& vec) {
       Elements = new Data[size];
       std::copy(vec.Elements, vec.Elements + size, Elements);
     } else {
-      // Questo caso indica uno stato anomalo per 'vec' se size > 0,
-      // o è la parte base di SetVec che non usa il suo 'Elements' ereditato.
-      // Allochiamo e inizializziamo a default per evitare crash,
-      // ma i dati non vengono copiati perché la sorgente è nullptr.
       Elements = new Data[size] {};
-      // std::cerr << "Warning: Vector copy constructor called with vec.Elements == nullptr and vec.size > 0. Allocating default initialized array for *this." << std::endl;
+      
     }
   } else {
-    Elements = nullptr; // Se size è 0, Elements deve essere nullptr.
+    Elements = nullptr; //if size = 0
   }
 }
 
@@ -81,7 +77,7 @@ Vector<Data>::Vector(Vector<Data>&& vec) noexcept {
 template<typename Data>
 Vector<Data>::~Vector() noexcept {
   delete[] Elements;
-  // Elements = nullptr; // Non strettamente necessario qui, ma buona pratica se l'oggetto potesse essere riutilizzato (non il caso per il distruttore)
+ 
 }
 
 /* ************************************************************************** */
@@ -89,25 +85,21 @@ Vector<Data>::~Vector() noexcept {
 // Copy assignment
 template<typename Data>
 Vector<Data>& Vector<Data>::operator=(const Vector<Data>& vec) {
-  if (this != &vec) { // Protezione auto-assegnazione
-    // Crea una copia temporanea usando il costruttore di copia (ora più robusto)
+  if (this != &vec) { 
     Vector<Data> temp(vec);
-    // Scambia i membri con la copia temporanea
+
     std::swap(size, temp.size);
     std::swap(Elements, temp.Elements);
   }
-  // La vecchia memoria di *this è ora in temp e sarà deallocata quando temp esce dallo scope.
   return *this;
 }
 
 // Move assignment
 template<typename Data>
 Vector<Data>& Vector<Data>::operator=(Vector<Data>&& vec) noexcept {
-  if (this != &vec) { // Protezione auto-assegnazione (anche se meno critica per move)
+  if (this != &vec) { 
     std::swap(size, vec.size);
     std::swap(Elements, vec.Elements);
-    // vec è ora nello stato "svuotato", i suoi vecchi membri sono in *this.
-    // Il distruttore di vec gestirà la deallocazione dei suoi (ora ex-this) membri se necessario.
   }
   return *this;
 }
@@ -117,15 +109,14 @@ Vector<Data>& Vector<Data>::operator=(Vector<Data>&& vec) noexcept {
 // Comparison operators
 template<typename Data>
 bool Vector<Data>::operator==(const Vector<Data>& vec) const noexcept {
-  if(size != vec.size) { // Confronta prima le size
+  if(size != vec.size) { 
     return false;
   }
-  if (Elements == vec.Elements) { // Se puntano allo stesso array (o entrambi nullptr)
+  if (Elements == vec.Elements) { 
       return true;
   }
-  if (Elements == nullptr || vec.Elements == nullptr) { // Se uno è nullptr e l'altro no (e size > 0), sono diversi
-      return false; // Questo caso è coperto da size != vec.size se size > 0 per uno e 0 per l'altro
-                    // Ma se size è uguale e >0, e uno è nullptr, è un errore di stato o sono diversi.
+  if (Elements == nullptr || vec.Elements == nullptr) { 
+      return false; //if size > 0 and one of the vectors is null
   }
   for(ulong index = 0; index < size; ++index) {
     if(Elements[index] != vec.Elements[index]) {
@@ -146,7 +137,7 @@ bool Vector<Data>::operator!=(const Vector<Data>& vec) const noexcept {
 template<typename Data>
 const Data& Vector<Data>::operator[]( ulong index) const {
   if(index < size) {
-    if (Elements == nullptr) { // Controllo di sicurezza
+    if (Elements == nullptr) {
         throw std::logic_error("Access to vector with null elements but size > 0.");
     }
     return Elements[index];
@@ -158,7 +149,7 @@ const Data& Vector<Data>::operator[]( ulong index) const {
 template<typename Data>
 Data& Vector<Data>::operator[](ulong index) {
   if(index < size) {
-    if (Elements == nullptr) { // Controllo di sicurezza
+    if (Elements == nullptr) { 
         throw std::logic_error("Access to vector with null elements but size > 0.");
     }
     return Elements[index];
@@ -170,7 +161,7 @@ Data& Vector<Data>::operator[](ulong index) {
 template<typename Data>
 const Data& Vector<Data>::Front() const {
   if(size != 0) {
-    if (Elements == nullptr) { // Controllo di sicurezza
+    if (Elements == nullptr) {
         throw std::logic_error("Access to Front() of vector with null elements but size > 0.");
     }
     return Elements[0];
@@ -182,7 +173,7 @@ const Data& Vector<Data>::Front() const {
 template<typename Data>
 Data& Vector<Data>::Front() {
   if(size != 0) {
-    if (Elements == nullptr) { // Controllo di sicurezza
+    if (Elements == nullptr) { 
         throw std::logic_error("Access to Front() of vector with null elements but size > 0.");
     }
     return Elements[0];
@@ -194,7 +185,7 @@ Data& Vector<Data>::Front() {
 template<typename Data>
 const Data& Vector<Data>::Back() const {
   if(size != 0) {
-    if (Elements == nullptr) { // Controllo di sicurezza
+    if (Elements == nullptr) { 
         throw std::logic_error("Access to Back() of vector with null elements but size > 0.");
     }
     return Elements[size - 1];
@@ -206,7 +197,7 @@ const Data& Vector<Data>::Back() const {
 template<typename Data>
 Data& Vector<Data>::Back() {
   if(size != 0) {
-    if (Elements == nullptr) { // Controllo di sicurezza
+    if (Elements == nullptr) {
         throw std::logic_error("Access to Back() of vector with null elements but size > 0.");
     }
     return Elements[size - 1];
@@ -220,22 +211,21 @@ Data& Vector<Data>::Back() {
 // Specific member functions (inherited from ResizableContainer)
 template<typename Data>
 void Vector<Data>::Resize(const ulong newsize) {
-  if (newsize == size) return; // Nessun cambiamento necessario
+  if (newsize == size) return; 
 
   if (newsize == 0) {
     Clear();
   } else {
-    Data* TmpElements = new Data[newsize] {}; // Alloca e inizializza a default
-    if (size > 0 && Elements != nullptr) { // Solo se ci sono elementi da copiare
+    Data* TmpElements = new Data[newsize] {}; 
+    if (size > 0 && Elements != nullptr) {
       ulong minsize = (size < newsize) ? size : newsize;
       for (ulong index = 0; index < minsize; ++index) {
-        // std::swap(Elements[index], TmpElements[index]); // Questo sposta gli elementi vecchi in TmpElements
-                                                        // e i nuovi (default) in Elements. Non è quello che vogliamo.
-        TmpElements[index] = std::move(Elements[index]); // Sposta i vecchi elementi nel nuovo buffer
+      
+        TmpElements[index] = std::move(Elements[index]); 
       }
     }
-    delete[] Elements; // Dealloca il vecchio buffer
-    Elements = TmpElements; // Elements ora punta al nuovo buffer
+    delete[] Elements;
+    Elements = TmpElements;
     size = newsize;
   }
 }
@@ -260,9 +250,7 @@ template<typename Data>
 SortableVector<Data>::SortableVector(const TraversableContainer<Data>& con) : Vector<Data>(con) {}
 
 template<typename Data>
-SortableVector<Data>::SortableVector(MappableContainer<Data>&& con) : Vector<Data>(std::move(con)) {} // Qui dovrebbe essere Vector<Data>(con) e poi Map.
-                                                                                                    // O Vector<Data>(con.Size()) e poi Map.
-                                                                                                    // La versione attuale di Vector(MappableContainer&&) è corretta.
+SortableVector<Data>::SortableVector(MappableContainer<Data>&& con) : Vector<Data>(std::move(con)) {} 
 
 /* ************************************************************************** */
 

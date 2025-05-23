@@ -8,34 +8,6 @@
 namespace lasd {
 
 /* ************************************************************************** */
-
-// Protected Auxiliary Functions
-
-template <typename Data>
-long SetVec<Data>::BinarySearch(const Data& val) const {
-    if (this->Empty()) { 
-        return -1;
-    }
-
-    ulong low = 0;
-    ulong high = this->size; 
-
-    while (low < high) {
-        ulong mid_logical = low + (high - low) / 2;
-        ulong mid_physical = (this->head + mid_logical) % this->buffer.Size(); 
-        
-        if (this->buffer[mid_physical] == val) {
-            return mid_logical; 
-        } else if (this->buffer[mid_physical] < val) {
-            low = mid_logical + 1;
-        } else {
-            high = mid_logical;
-        }
-    }
-    return -1; 
-}
-
-
 // Specific constructors
 
 template <typename Data>
@@ -188,14 +160,14 @@ bool SetVec<Data>::Insert(Data&& val) {
     while(insert_pos_logical < this->size && this->operator[](insert_pos_logical) < val) {
         insert_pos_logical++;
     }
-    ulong insert_pos_physical = (this->head + insert_pos_logical) % this->buffer.Size();
+    ulong insert_pos_physical = (this->head + insert_pos_logical) % this->buffer.Size(); //find index in the physical buffer
 
     if (insert_pos_logical == this->size) {
         this->buffer[this->tail] = std::move(val);
         this->tail = (this->tail + 1) % this->buffer.Size();
     } else {
         ulong current_logical = this->size;
-        while(current_logical > insert_pos_logical) {
+        while(current_logical > insert_pos_logical) { // shift to the right
             ulong physical_dest = (this->head + current_logical) % this->buffer.Size();
             ulong physical_src = (this->head + current_logical - 1) % this->buffer.Size();
             this->buffer[physical_dest] = std::move(this->buffer[physical_src]);
@@ -498,6 +470,33 @@ template <typename Data>
 void SetVec<Data>::RemoveSuccessor(const Data& val) {
     const Data& succ = Successor(val);
     Remove(succ);
+}
+
+
+// Protected Auxiliary Functions
+
+template <typename Data>
+long SetVec<Data>::BinarySearch(const Data& val) const {
+    if (this->Empty()) { 
+        return -1;
+    }
+
+    ulong low = 0;
+    ulong high = this->size; 
+
+    while (low < high) {
+        ulong mid_logical = low + (high - low) / 2;
+        ulong mid_physical = (this->head + mid_logical) % this->buffer.Size(); 
+        
+        if (this->buffer[mid_physical] == val) {
+            return mid_logical; 
+        } else if (this->buffer[mid_physical] < val) {
+            low = mid_logical + 1;
+        } else {
+            high = mid_logical;
+        }
+    }
+    return -1; 
 }
 
 

@@ -100,6 +100,8 @@ bool SetLst<Data>::Insert(const Data& value) {
     return true;
 }
 
+
+
 template <typename Data>
 bool SetLst<Data>::Insert(Data&& value) {
     typename List<Data>::Node* curr = this->head;
@@ -131,6 +133,9 @@ bool SetLst<Data>::Insert(Data&& value) {
     }
     return true;
 }
+
+
+
 
 template <typename Data>
 bool SetLst<Data>::Remove(const Data& value) {

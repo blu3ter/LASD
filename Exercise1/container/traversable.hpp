@@ -68,7 +68,7 @@ public:
 
    template <typename Accumulator>
   // type Fold(arguments) specifiers;
-  Accumulator Fold(FoldFun<Accumulator>, Accumulator); //TODO: const
+  Accumulator Fold(FoldFun<Accumulator>, Accumulator); 
 
   /* ************************************************************************ */
 
@@ -129,7 +129,7 @@ virtual ~PreOrderTraversableContainer() = default;
   virtual void PreOrderTraverse(TraverseFun) const = 0;
 
   template <typename Accumulator>
-  using FoldFun = typename TraversableContainer<Data>::/*TODO template?*/ FoldFun<Accumulator>; 
+  using FoldFun = typename TraversableContainer<Data>::FoldFun<Accumulator>; 
 
    template <typename Accumulator>
   // type PreOrderFold(arguments) specifiers;
@@ -190,7 +190,7 @@ public:
   virtual void PostOrderTraverse(TraverseFun) const = 0;
 
   template <typename Accumulator>
-  using FoldFun = typename TraversableContainer<Data>::/*TODO template?*/FoldFun<Accumulator>;
+  using FoldFun = typename TraversableContainer<Data>::FoldFun<Accumulator>;
 
    template <typename Accumulator>
   // type PostOrderFold(arguments) specifiers;

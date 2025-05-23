@@ -67,15 +67,14 @@ public:
   // type InsertAll(argument) specifiers; // Move of the value; From MappableContainer; True if all are inserted
   virtual bool InsertAll(MappableContainer<Data>&&); 
   // type RemoveAll(argument) specifiers; // From TraversableContainer; True if all are removed
-  virtual bool RemoveAll(TraversableContainer<Data>&&); //TODO FORSE CI VA UNA SOLA & e const all'inizio del parametro
+  virtual bool RemoveAll(TraversableContainer<Data>&&); 
 
   // type InsertSome(argument) specifiers; // Copy of the value; From TraversableContainer; True if some is inserted
   virtual bool InsertSome(const TraversableContainer<Data>&);
   // type InsertSome(argument) specifiers; // Move of the value; From MappableContainer; True if some is inserted
   virtual bool InsertSome(MappableContainer<Data>&&);
   // type RemoveSome(argument) specifiers; // From TraversableContainer; True if some is removed
-  virtual bool RemoveSome(TraversableContainer<Data>&&); //TODO FORSE CI VA UNA SOLA & e const all'inizio del parametro
-
+  virtual bool RemoveSome(TraversableContainer<Data>&&); 
 };
 
 /* ************************************************************************** */
@@ -98,45 +97,44 @@ public:
 
   // Copy assignment
   // type operator=(argument); // Copy assignment of abstract types is not possible.
-  OrderedDictionaryContainer& operator = (const OrderedDictionaryContainer&) = delete; //TODO forse va <Data> affianco ritorno
-  // Move assignment
+  OrderedDictionaryContainer& operator = (const OrderedDictionaryContainer&) = delete; 
   // type operator=(argument); // Move assignment of abstract types is not possible.
-  OrderedDictionaryContainer& operator = (OrderedDictionaryContainer&&) noexcept = delete; //TODO forse va <Data> affianco ritorno
+  OrderedDictionaryContainer& operator = (OrderedDictionaryContainer&&) noexcept = delete;
   /* ************************************************************************ */
 
   // Comparison operators
   // type operator==(argument) specifiers; // Comparison of abstract types is not possible.
-  bool operator==(const OrderedDictionaryContainer&) const noexcept = delete;//TODO forse va <Data> affianco parametro
+  bool operator==(const OrderedDictionaryContainer&) const noexcept = delete;
   // type operator!=(argument) specifiers; // Comparison of abstract types is not possible.
-  bool operator!=(const OrderedDictionaryContainer&) const noexcept = delete; //TODO forse va <Data> affianco parametro
+  bool operator!=(const OrderedDictionaryContainer&) const noexcept = delete;
 
   /* ************************************************************************ */
 
   // Specific member functions
 
   // type Min(argument) specifiers; // (concrete function must throw std::length_error when empty)
-  virtual const Data& Min() const = 0; //TODO forse va const prima di Data e Data&
+  virtual const Data& Min() const = 0;
   // type MinNRemove(argument) specifiers; // (concrete function must throw std::length_error when empty)
   virtual Data MinNRemove() = 0;
   // type RemoveMin(argument) specifiers; // (concrete function must throw std::length_error when empty)
   virtual void RemoveMin() = 0;
 
   // type Max(argument) specifiers; // (concrete function must throw std::length_error when empty)
-  virtual const Data& Max() const = 0; //TODO forse va const prima di Data&
+  virtual const Data& Max() const = 0;
   // type MaxNRemove(argument) specifiers; // (concrete function must throw std::length_error when empty)
   virtual Data MaxNRemove() = 0;
   // type RemoveMax(argument) specifiers; // (concrete function must throw std::length_error when empty)
   virtual void RemoveMax() = 0;
 
   // type Predecessor(argument) specifiers; // (concrete function must throw std::length_error when not found)
-  virtual const Data& Predecessor(const Data&) const = 0;  //TODO forse va const prima di Data&
+  virtual const Data& Predecessor(const Data&) const = 0; 
   // type PredecessorNRemove(argument) specifiers; // (concrete function must throw std::length_error when not found)
   virtual Data PredecessorNRemove(const Data&) = 0;
   // type RemovePredecessor(argument) specifiers; // (concrete function must throw std::length_error when not found)
   virtual void RemovePredecessor(const Data&) = 0;
 
   // type Successor(argument) specifiers; // (concrete function must throw std::length_error when not found)
-  virtual const Data& Successor(const Data&) const = 0;  //TODO forse va const prima di Data&
+  virtual const Data& Successor(const Data&) const = 0; 
 
   // type SuccessorNRemove(argument) specifiers; // (concrete function must throw std::length_error when not found
   virtual Data SuccessorNRemove(const Data&) = 0;

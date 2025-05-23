@@ -22,7 +22,7 @@ bool TraversableContainer<Data>::Exists(const Data& dat) const noexcept {
 
 template<typename Data>
 template<typename Accumulator>
-Accumulator TraversableContainer<Data>::Fold(typename TraversableContainer<Data>::FoldFun<Accumulator> foldFun, Accumulator acc) /*TODO const */ {
+Accumulator TraversableContainer<Data>::Fold(typename TraversableContainer<Data>::FoldFun<Accumulator> foldFun, Accumulator acc) {
     Accumulator result = acc;
     Traverse([&foldFun, &result](const Data& curr) {
         result = foldFun(curr, result);
