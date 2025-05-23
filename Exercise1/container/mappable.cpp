@@ -1,7 +1,3 @@
-#ifndef MAPPABLECONTAINER_CPP
-#define MAPPABLECONTAINER_CPP
-
-#include "mappable.hpp"
 
 namespace lasd {
 
@@ -27,4 +23,4 @@ void PostOrderMappableContainer<Data>::Map(typename MappableContainer<Data>::Map
 
 }
 
-#endif
+

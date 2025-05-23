@@ -1,7 +1,4 @@
-#ifndef TRAVERSABLECONTAINER_CPP
-#define TRAVERSABLECONTAINER_CPP
 
-#include "traversable.hpp"
 
 namespace lasd {
 
@@ -72,4 +69,4 @@ Accumulator PostOrderTraversableContainer<Data>::PostOrderFold(typename Traversa
 
 }
 
-#endif
+

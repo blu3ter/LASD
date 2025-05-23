@@ -1,10 +1,9 @@
-#ifndef VECTOR_CPP
-#define VECTOR_CPP
+
 
 #include <stdexcept>
 #include <string>
 #include <iostream> 
-#include "./vector.hpp"
+
 
 namespace lasd {
 
@@ -288,4 +287,4 @@ SortableVector<Data>& SortableVector<Data>::operator=(SortableVector<Data>&& vec
 
 }
 
-#endif
+

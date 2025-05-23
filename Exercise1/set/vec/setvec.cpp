@@ -1,7 +1,7 @@
 #include <stdexcept>
 #include <algorithm> // Per std::sort, std::unique, std::move, std::lower_bound
 
-#include "setvec.hpp"
+
 
 /* ************************************************************************** */
 

@@ -218,8 +218,10 @@ protected:
 
 }
 
+#include "linear.cpp"
+
 #endif
 
-#include "linear.cpp"
+
 
 

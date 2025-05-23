@@ -1,8 +1,3 @@
-#ifndef DICTIONARYCONTAINER_CPP
-#define DICTIONARYCONTAINER_CPP
-
-#include "dictionary.hpp"
-
 namespace lasd {
 
 /* ************************************************************************** */
@@ -77,4 +72,4 @@ bool DictionaryContainer<Data>::RemoveSome(TraversableContainer<Data>&& containe
 
 }
 
-#endif
+

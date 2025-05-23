@@ -1,7 +1,4 @@
-#ifndef LINEARCONTAINER_CPP
-#define LINEARCONTAINER_CPP
 
-#include "linear.hpp"
 
 namespace lasd {
 
@@ -10,12 +7,12 @@ namespace lasd {
 // LinearContainer
 
 template<typename Data>
-inline const Data& LinearContainer<Data>::Front() const {
+const Data& LinearContainer<Data>::Front() const {
     return operator[](0);
 }
 
 template<typename Data>
-inline const Data& LinearContainer<Data>::Back() const {
+const Data& LinearContainer<Data>::Back() const {
     return operator[](size - 1);
 }
 
@@ -113,5 +110,3 @@ void SortableLinearContainer<Data>::InsertionSort() noexcept{
 
 
 } // namespace lasd
-
-#endif
