@@ -68,7 +68,7 @@ public:
 
    template <typename Accumulator>
   // type Fold(arguments) specifiers;
-  Accumulator Fold(FoldFun<Accumulator>, Accumulator); 
+  Accumulator Fold(FoldFun<Accumulator>, Accumulator) const;
 
   /* ************************************************************************ */
 
