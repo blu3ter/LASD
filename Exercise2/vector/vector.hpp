@@ -130,7 +130,7 @@ protected:
 /* ************************************************************************** */
 
 template <typename Data>
-class SortableVector : virtual public Vector<Data>,
+class SortableVector : public Vector<Data>,
                       virtual public SortableLinearContainer<Data> {
   // Must extend Vector<Data>,
   //             SortableLinearContainer<Data>
@@ -190,8 +190,6 @@ protected:
 
   // Auxiliary functions, if necessary!
   // sort() already implemented in SortableLinearContainer
-
-
 
 };
 

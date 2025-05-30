@@ -15,7 +15,7 @@ namespace lasd {
 
 template <typename Data>
 class HeapVec : virtual public Heap<Data>,
-                virtual public SortableVector<Data> {
+                public SortableVector<Data>  {//TODO virtual protected?
   // Must extend Heap<Data>,
   // Could extend SortableVector<Data>
 

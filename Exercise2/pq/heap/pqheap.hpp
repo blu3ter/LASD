@@ -30,7 +30,7 @@ protected:
   using HeapVec<Data>::Elements;
   using HeapVec<Data>::HeapifyUp;
   using HeapVec<Data>::HeapifyDown;
-  using SortableVector<Data>::Resize;
+  using HeapVec<Data>::Resize;
 
   // ...
 
