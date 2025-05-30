@@ -68,6 +68,10 @@ bool HeapVec<Data>::operator!=(const HeapVec<Data>& other) const noexcept {
 // IsHeap function - verifies if the current array satisfies max-heap property
 template <typename Data>
 bool HeapVec<Data>::IsHeap() const noexcept {
+    if (size == 0) {
+        return true; // Empty heap is valid
+    }
+    
     for (ulong i = 0; i < size; ++i) {
         ulong leftChild = LeftChild(i);
         ulong rightChild = RightChild(i);
@@ -102,6 +106,11 @@ void HeapVec<Data>::Heapify() {
 // Sort function - HeapSort implementation
 template <typename Data>
 void HeapVec<Data>::Sort() noexcept {
+    // Check if size > 0
+    if (size == 0) {
+        return;
+    }
+    
     // First ensure we have a valid heap
     Heapify();
     
@@ -143,6 +152,8 @@ ulong HeapVec<Data>::Parent(ulong index) const noexcept {
 // HeapifyUp - maintains max-heap property going upward
 template <typename Data>
 void HeapVec<Data>::HeapifyUp(ulong index) {
+    if (index >= size) return;
+    
     while (index > 0) {
         ulong parentIndex = Parent(index);
         
@@ -160,6 +171,8 @@ void HeapVec<Data>::HeapifyUp(ulong index) {
 // HeapifyDown - maintains max-heap property going downward
 template <typename Data>
 void HeapVec<Data>::HeapifyDown(ulong index) {
+    if (index >= size) return;
+    
     while (true) {
         ulong largest = index;
         ulong leftChild = LeftChild(index);

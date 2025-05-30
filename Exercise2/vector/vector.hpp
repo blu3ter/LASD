@@ -122,7 +122,8 @@ public:
 protected:
 
   // Auxiliary functions, if necessary!
-
+  using typename TraversableContainer<Data>::TraverseFun;
+  using typename MappableContainer<Data>::MapFun;
 
 };
 
