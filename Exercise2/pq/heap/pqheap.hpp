@@ -15,7 +15,7 @@ namespace lasd {
 
 template <typename Data>
 class PQHeap : virtual public PQ<Data>,
-               virtual public HeapVec<Data> {
+                public HeapVec<Data> {
   // Must extend PQ<Data>,
   // Could extend HeapVec<Data>
 
@@ -31,6 +31,10 @@ protected:
   using HeapVec<Data>::HeapifyUp;
   using HeapVec<Data>::HeapifyDown;
   using HeapVec<Data>::Resize;
+
+  // Capacity management for optimal performance
+  ulong capacity = 0;
+  static const ulong DEFAULT_CAPACITY = 16;
 
   // ...
 
@@ -98,6 +102,10 @@ public:
 protected:
 
   // Auxiliary functions, if necessary!
+  
+  // Capacity management functions
+  void EnsureCapacity(ulong requiredSize);
+  void InitializeCapacity();
 
 };
 

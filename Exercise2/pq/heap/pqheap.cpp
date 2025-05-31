@@ -10,12 +10,14 @@ namespace lasd {
 template <typename Data>
 PQHeap<Data>::PQHeap(const TraversableContainer<Data>& container) : HeapVec<Data>(container) {
     // HeapVec constructor already calls Heapify(), so we have a valid heap
+    capacity = size; // Initial capacity equals size
 }
 
 // Constructor from MappableContainer (move)
 template <typename Data>
 PQHeap<Data>::PQHeap(MappableContainer<Data>&& container) : HeapVec<Data>(std::move(container)) {
     // HeapVec constructor already calls Heapify(), so we have a valid heap
+    capacity = size; // Initial capacity equals size
 }
 
 /* ************************************************************************** */
@@ -24,12 +26,15 @@ PQHeap<Data>::PQHeap(MappableContainer<Data>&& container) : HeapVec<Data>(std::m
 template <typename Data>
 PQHeap<Data>::PQHeap(const PQHeap<Data>& other) : HeapVec<Data>(other) {
     // HeapVec copy constructor preserves heap property
+    capacity = other.capacity;
 }
 
 // Move constructor
 template <typename Data>
 PQHeap<Data>::PQHeap(PQHeap<Data>&& other) noexcept : HeapVec<Data>(std::move(other)) {
     // HeapVec move constructor preserves heap property
+    capacity = other.capacity;
+    other.capacity = 0;
 }
 
 /* ************************************************************************** */
@@ -38,6 +43,7 @@ PQHeap<Data>::PQHeap(PQHeap<Data>&& other) noexcept : HeapVec<Data>(std::move(ot
 template <typename Data>
 PQHeap<Data>& PQHeap<Data>::operator=(const PQHeap<Data>& other) {
     HeapVec<Data>::operator=(other);
+    capacity = other.capacity;
     return *this;
 }
 
@@ -45,6 +51,8 @@ PQHeap<Data>& PQHeap<Data>::operator=(const PQHeap<Data>& other) {
 template <typename Data>
 PQHeap<Data>& PQHeap<Data>::operator=(PQHeap<Data>&& other) noexcept {
     HeapVec<Data>::operator=(std::move(other));
+    capacity = other.capacity;
+    other.capacity = 0;
     return *this;
 }
 
@@ -71,8 +79,8 @@ void PQHeap<Data>::RemoveTip() {
     // Move last element to root position
     Elements[0] = Elements[size - 1];
     
-    // Reduce size
-    Resize(size - 1);
+    // Reduce size (but keep capacity for future insertions)
+    Container::size = size - 1;
     
     // Restore heap property by moving the new root down
     if (size > 0) {
@@ -99,8 +107,22 @@ Data PQHeap<Data>::TipNRemove() {
 // Insert function - inserts a new element (copy version)
 template <typename Data>
 void PQHeap<Data>::Insert(const Data& element) {
-    // Increase size by one
-    Resize(size + 1);
+    // Initialize capacity if this is the first insertion
+    if (capacity == 0) {
+        InitializeCapacity();
+    }
+    
+    // Ensure we have enough capacity for one more element
+    EnsureCapacity(size + 1);
+    
+    // Increase size by one (but don't reallocate since we have capacity)
+    if (size + 1 <= capacity) {
+        // Just increment size without reallocating
+        Container::size = size + 1;
+    } else {
+        // This should not happen due to EnsureCapacity, but safety fallback
+        Resize(size + 1);
+    }
     
     // Insert new element at the end
     Elements[size - 1] = element;
@@ -112,8 +134,22 @@ void PQHeap<Data>::Insert(const Data& element) {
 // Insert function - inserts a new element (move version)
 template <typename Data>
 void PQHeap<Data>::Insert(Data&& element) {
-    // Increase size by one
-    Resize(size + 1);
+    // Initialize capacity if this is the first insertion
+    if (capacity == 0) {
+        InitializeCapacity();
+    }
+    
+    // Ensure we have enough capacity for one more element
+    EnsureCapacity(size + 1);
+    
+    // Increase size by one (but don't reallocate since we have capacity)
+    if (size + 1 <= capacity) {
+        // Just increment size without reallocating
+        Container::size = size + 1;
+    } else {
+        // This should not happen due to EnsureCapacity, but safety fallback
+        Resize(size + 1);
+    }
     
     // Move new element to the end
     Elements[size - 1] = std::move(element);
@@ -162,6 +198,43 @@ void PQHeap<Data>::Change(ulong index, Data&& newValue) {
         HeapifyDown(index);
     }
     // If newValue == oldValue, no heap property restoration needed
+}
+
+/* ************************************************************************** */
+
+// Capacity management functions
+
+// Ensures that the heap has at least the required capacity
+template <typename Data>
+void PQHeap<Data>::EnsureCapacity(ulong requiredSize) {
+    if (requiredSize > capacity) {
+        // Calculate new capacity: double the current capacity or use DEFAULT_CAPACITY
+        ulong newCapacity = (capacity == 0) ? DEFAULT_CAPACITY : capacity;
+        while (newCapacity < requiredSize) {
+            newCapacity *= 2;
+        }
+        
+        // Store current size
+        ulong currentSize = size;
+        
+        // Resize to new capacity (this will change size to newCapacity)
+        Resize(newCapacity);
+        
+        // Restore original size but keep the larger capacity
+        Container::size = currentSize;
+        capacity = newCapacity;
+    }
+}
+
+// Initialize capacity for default constructor
+template <typename Data>
+void PQHeap<Data>::InitializeCapacity() {
+    if (capacity == 0 && size == 0) {
+        // Allocate initial capacity but keep size at 0
+        Resize(DEFAULT_CAPACITY);
+        Container::size = 0;
+        capacity = DEFAULT_CAPACITY;
+    }
 }
 
 /* ************************************************************************** */
